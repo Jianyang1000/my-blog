@@ -1,13 +1,20 @@
 <template>
-    $END$
+    <div class="detail">
+
+    </div>
 </template>
 
 <script>
     export default {
-        name: ""
+        name: "Detail",
+        methods: {
+
+        }
     }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
+    .detail {
 
+    }
 </style>
