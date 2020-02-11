@@ -35,18 +35,21 @@
         </el-table>
 
         <el-dialog title="修改数据" :visible.sync="modifyFormVisible">
-            <el-form :model="form">
-                <el-form-item label="英雄" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-form :model="modifyForm" :rules="rules">
+                <el-form-item label="英雄" :label-width="formLabelWidth" prop="name">
+                    <el-input v-model="modifyForm.name" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="年龄" :label-width="formLabelWidth">
-                    <el-input v-model="form.age" autocomplete="off"></el-input>
+                <el-form-item label="年龄" :label-width="formLabelWidth" prop="age">
+                    <el-input v-model="modifyForm.age" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="性别" :label-width="formLabelWidth">
-                    <el-input v-model="form.sex" autocomplete="off"></el-input>
+                <el-form-item label="性别:" :label-width="formLabelWidth" prop="sex">
+                    <el-select v-model="modifyForm.sex" placeholder="请选择英雄性别" class="sexArea">
+                        <el-option label="汉子" value="man"></el-option>
+                        <el-option label="妹子" value="woman"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="地址" :label-width="formLabelWidth">
-                    <el-input v-model="form.address" autocomplete="off"></el-input>
+                <el-form-item label="地址" :label-width="formLabelWidth" prop="address">
+                    <el-input v-model="modifyForm.address" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -57,18 +60,24 @@
 
 
         <el-dialog title="添加数据" :visible.sync="dialogFormVisible" width="31%">
-            <el-form :model="form">
-                <el-form-item label="英雄" :label-width="formLabelWidth">
+            <el-form :model="form" :rules="rules">
+                <el-form-item label="英雄" :label-width="formLabelWidth" prop="name">
                     <el-input v-model="form.name" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="年龄" :label-width="formLabelWidth">
+                <el-form-item label="年龄" :label-width="formLabelWidth" prop="age">
                     <el-input v-model="form.age" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="性别" :label-width="formLabelWidth">
-                    <el-input v-model="form.sex" autocomplete="off"></el-input>
+                <el-form-item label="性别:" :label-width="formLabelWidth" prop="sex">
+                    <el-select v-model="form.sex" placeholder="请选择英雄性别" class="sexArea">
+                        <el-option label="汉子" value="man"></el-option>
+                        <el-option label="妹子" value="woman"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="地址" :label-width="formLabelWidth">
+                <el-form-item label="地址" :label-width="formLabelWidth" prop="address">
                     <el-input v-model="form.address" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="背景介绍" :label-width="formLabelWidth">
+                    <el-input v-model="form.explain" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -90,15 +99,45 @@
                 dialogTableVisible: false,
                 dialogFormVisible: false,
                 modifyFormVisible: false,
-                modifyForm: '',
+                modifyForm: {
+                    name: '',
+                    address: '',
+                    sex: '',
+                    age: {
+                        type: Number
+                    },
+                    explain:''
+                },
                 modifyId: '',
                 form: {
                     name: '',
                     address: '',
                     sex: '',
-                    age: ''
+                    age: {
+                        type: Number
+                    },
+                    explain:''
                 },
-                formLabelWidth: '120px'
+                formLabelWidth: '120px',
+                rules: {
+                    name: [
+                        {required:true, message:'请输入英雄名称',trigger:'blur'}
+                    ],
+                    age: [
+                        {required:true, message:'请输入英雄年龄',trigger:'blur'},
+                        {type:"number",message:'年龄必须是数字'}
+                    ],
+                    sex: [
+                        {required:true, message:'请输入英雄性别',trigger:'blur'},
+                    ],
+                    address: [
+                        {required:true, message:'请输入英雄地址',trigger:'blur'},
+                    ],
+                    explain: [
+                        {required:true, message:'请输入英雄背景故事',trigger:'blur'},
+                    ]
+
+                }
             }
         },
         methods: {
@@ -160,10 +199,7 @@
             },
             modify(row) {
                 this.modifyFormVisible = true
-                this.form.name = row.name
-                this.form.sex = row.sex
-                this.form.address = row.address
-                this.form.age = row.age
+                this.modifyForm = Object.assign({}, row);
                 this.modifyId = row['_id'];
             },
             toDetail: function(id) {
@@ -177,7 +213,7 @@
 
                 sessionStorage.queryParmas = JSON.stringify(queryParmas);
 
-                this.$router.push(`/Detail/${id}`);
+                this.$router.push(`/detail/${id}`);
             },
         },
         created(){
