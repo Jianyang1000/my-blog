@@ -68,12 +68,6 @@ export const currencyRoutes = [
         meta: { title: '文章管理', icon: 'el-icon-s-management' },
       },
       {
-        path: 'draft',
-        name: 'Draft article',
-        component: () => import('@/views/article/draft-article'),
-        meta: { title: '草稿箱', icon: 'el-icon-receiving' },
-      },
-      {
         path: 'delete',
         name: 'Delete article',
         component: () => import('@/views/article/delete-article'),

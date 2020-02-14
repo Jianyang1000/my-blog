@@ -78,7 +78,23 @@
                         </div>
                         <div class="article">
                         <span class="articleTitle">
-                            Vue实现组件复用
+                            实现一个自定义的轮播图
+                        </span>
+                            <span class="createdTime">
+                            <i class="el-icon-date"></i>2016.11.12
+                        </span>
+                        </div>
+                        <div class="article">
+                        <span class="articleTitle">
+                            javascirpt中的闭包
+                        </span>
+                            <span class="createdTime">
+                            <i class="el-icon-date"></i>2016.11.12
+                        </span>
+                        </div>
+                        <div class="article">
+                        <span class="articleTitle">
+                            开始react的学习
                         </span>
                             <span class="createdTime">
                             <i class="el-icon-date"></i>2016.11.12
@@ -174,15 +190,17 @@
                 font-size: 16px;
                 text-align: left;
                 margin-bottom: 15px;
+                font-weight: bold;
             }
 
             .article {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                border: 1px solid #666;
+                border: 1px solid #eee;
                 border-bottom: none;
                 padding: 10px;
+                color: #777;
                 .articleTitle {
 
                 }
@@ -201,7 +219,7 @@
                 border-top-right-radius: 5px;
             }
             .article:last-child {
-                border: 1px solid #666;
+                border: 1px solid #eee;
                 border-bottom-left-radius: 5px;
                 border-bottom-right-radius: 5px;
             }

@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     opend: false,
-    routes: currencyRoutes
+    routes: currencyRoutes,
+    message: false
   },
   mutations: {
     toggleOpen(state,payload){
@@ -16,6 +17,10 @@ export default new Vuex.Store({
     SET_ROUTES(state, payload) {
       state.routes = [...currencyRoutes, ...payload]
       state.addRoutes = payload
+    },
+    SET_MESSAGE(state){
+      state.message = !state.message
+
     }
   },
   actions: {

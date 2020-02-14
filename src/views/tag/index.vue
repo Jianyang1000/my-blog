@@ -5,7 +5,10 @@
                 分类/标签
             </div>
             <div class="categoryManage">
-                添加分类
+                <div class="addTag">
+                    <i class="el-icon-circle-plus-outline"></i>
+                    添加分类
+                </div>
                 <el-table border stripe
                           :data="tableData"
                           style="width: 100%">
@@ -45,7 +48,10 @@
                 </el-table>
             </div>
             <div class="tagManage">
-                添加标签
+                <div class="addTag">
+                    <i class="el-icon-circle-plus-outline"></i>
+                    添加标签
+                </div>
                 <el-table border stripe
                           :data="tableData"
                           style="width: 100%">
@@ -96,6 +102,27 @@
 </script>
 
 <style scoped lang="scss">
+    .addTag {
+        text-align: left;
+        font-size: 16px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        display:inline-block;
+        vertical-align: bottom;
+
+    }
+    .addTag:hover {
+        i {
+            color: #409EFF;
+        }
+    }
+    .categoryManage {
+        margin-bottom: 35px;
+    }
+    .categoryManage,.tagManage {
+        text-align: left;
+    }
     .header {
         display: flex;
         justify-content: flex-start;
