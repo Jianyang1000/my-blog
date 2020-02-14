@@ -7,8 +7,11 @@ import './style/index.scss'
 import ElementUI from 'element-ui'
 import Fragment from 'vue-fragment'
 import axios from 'axios'
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 
 Vue.prototype.$http = axios
+Vue.use(mavonEditor)
 Vue.use(Fragment.Plugin)
 Vue.use(ElementUI)
 Vue.config.productionTip = false

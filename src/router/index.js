@@ -7,12 +7,11 @@ import DashBoard from '../views/dashboard'
 
 Vue.use(VueRouter)
 
-const currencyRoutes = [
+export const currencyRoutes = [
   {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login'),
-    meta: { title: '登录页' },
     hidden: true
   },
   {
@@ -46,6 +45,81 @@ const currencyRoutes = [
         name: 'Driver-index',
         component: () => import('@/views/driver-page'),
         meta: { title: '引导指南', icon: 'el-icon-s-flag' }
+      }
+    ]
+  },
+  {
+    path: '/article',
+    name: 'Article',
+    component: Layout,
+    redirect: '/article/add',
+    meta: {title: '文章', icon: 'el-icon-tickets'},
+    children: [
+      {
+        path: 'add',
+        name: 'Add article',
+        component: () => import('@/views/article/add-article'),
+        meta: { title: '写文章', icon: 'el-icon-edit' },
+      },
+      {
+        path: 'manage',
+        name: 'Manage article',
+        component: () => import('@/views/article/manage-article'),
+        meta: { title: '文章管理', icon: 'el-icon-s-management' },
+      },
+      {
+        path: 'draft',
+        name: 'Draft article',
+        component: () => import('@/views/article/draft-article'),
+        meta: { title: '草稿箱', icon: 'el-icon-receiving' },
+      },
+      {
+        path: 'delete',
+        name: 'Delete article',
+        component: () => import('@/views/article/delete-article'),
+        meta: { title: '回收站', icon: 'el-icon-delete' },
+      }
+    ]
+  },
+  {
+    path: '/tag',
+    name: 'Tag',
+    component: Layout,
+    redirect: '/tag/index',
+    children: [
+      {
+        path: 'index',
+        name: 'Manage Tag',
+        component: () => import('@/views/tag'),
+        meta: { title: '分类/标签', icon: 'el-icon-collection-tag' }
+      }
+    ]
+  },
+  {
+    path: '/comment',
+    name: 'Comment',
+    component: Layout,
+    redirect: '/comment/index',
+    children: [
+      {
+        path: 'index',
+        name: 'Manage Comment',
+        component: () => import('@/views/comment'),
+        meta: { title: '评论', icon: 'el-icon-chat-line-round' }
+      }
+    ]
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: Layout,
+    redirect: '/user/index',
+    children: [
+      {
+        path: 'index',
+        name: 'Manage User',
+        component: () => import('@/views/user'),
+        meta: { title: '用户', icon: 'el-icon-user' }
       }
     ]
   }
