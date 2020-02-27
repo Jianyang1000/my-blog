@@ -5,9 +5,9 @@
                 <span>文章管理 (共计: 6篇)</span>
             </div>
             <el-table border stripe
-                    :data="tableData"
-                    style="width: 100%">
+                    :data="articleLists">
                 <el-table-column
+                        prop="title"
                         label="标题"
                         min-width="100">
                     <template slot-scope="scope">
@@ -16,39 +16,35 @@
                     </template>
                 </el-table-column>
                 <el-table-column
+                        prop="cover"
                         label="封面图"
                         width="100">
                 </el-table-column>
                 <el-table-column
-                        prop="name"
+                        prop="is_encrypt"
                         label="加密"
                         width="80">
                 </el-table-column>
                 <el-table-column
-                        prop="name"
+                        prop="page_view"
                         label="阅读量"
                         width="80">
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="created_time"
                         label="发布时间"
                         width="128">
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="delete_time"
                         label="删除时间"
                         width="128">
-                </el-table-column>
-                <el-table-column
-                        prop="name"
-                        label="状态"
-                        width="70">
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button
                                 type="primary"
-                                @click="handleEdit(scope.$index, scope.row)">编辑
+                                @click="handleEdit(scope.$index, scope.row)">还原
                         </el-button>
                         <el-button
                                 type="danger"
@@ -62,7 +58,7 @@
             <!-- 分页 -->
             <div
                     class="pagination"
-                    v-show="tableData.length > 0">
+                    v-show="articleLists.length > 0">
                 <el-pagination
                         background
                         layout="prev, pager, next"
@@ -81,26 +77,11 @@
 </template>
 
 <script>
+    import {getDeleteArticleList} from '@/api/article'
     export default {
         data() {
             return {
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }]
+                articleLists: []
             }
         },
         methods: {
@@ -109,7 +90,18 @@
             },
             handleDelete(index, row) {
                 console.log(index, row);
+            },
+            getArticleList(){
+                getDeleteArticleList().then((results) => {
+                    this.articleLists = results.data
+                }).catch((error) => {
+                    console.log(error);
+                })
             }
+        },
+
+        created(){
+            this.getArticleList()
         }
     }
 </script>

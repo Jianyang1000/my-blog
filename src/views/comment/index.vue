@@ -17,12 +17,12 @@
                 ></el-input>
                 <el-button type="primary" icon="el-icon-search">搜索</el-button>
             </div>
-            <el-table  border stripe>
-                <el-table-column prop="title" label="评论者"></el-table-column>
-                <el-table-column prop="tag" label="评论内容"></el-table-column>
-                <el-table-column prop="category" label="文章"></el-table-column>
+            <el-table :data="commentLists" border stripe>
+                <el-table-column prop="name" label="评论者"></el-table-column>
+                <el-table-column prop="content" label="评论内容"></el-table-column>
+                <el-table-column prop="articleId" label="文章"></el-table-column>
                 <el-table-column
-                        prop="count"
+                        prop="author"
                         label="作者"
 
                 ></el-table-column>
@@ -30,23 +30,29 @@
                 <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
                         <el-button
+                                type="primary"
+                                @click="toDelete(scope.row)"
+                                :disabled="scope.row.status !== 3 ? false : true"
+                        >编辑</el-button>
+                        <el-button
                                 type="danger"
                                 @click="toDelete(scope.row)"
                                 :disabled="scope.row.status !== 3 ? false : true"
-                        >取消</el-button>
+                        >删除</el-button>
+
                     </template>
                 </el-table-column>
             </el-table>
             <el-pagination
                     background
                     layout="total, sizes, prev, pager, next"
-
+                    class="pagination"
             >
                 <!--:page-sizes="pageSizes"
                 :page-size="pageSize"
                 :current-page="currentPage"
                 :total="total"
-                class="pagination"
+
                 @size-change="handleSize"
                 @current-change="handlePage"-->
             </el-pagination>
@@ -56,7 +62,17 @@
 
 <script>
     export default {
-        name: ""
+        name: "Comment",
+        data(){
+            return {
+                commentLists: []
+            }
+        },
+        created() {
+            this.$http('/api/comment').then((result) => {
+                this.commentLists = result.data
+            })
+        }
     }
 </script>
 
@@ -78,5 +94,8 @@
     }
     .pagination {
         margin-top: 30px;
+    }
+    .el-button {
+        padding: 8px 12px;
     }
 </style>

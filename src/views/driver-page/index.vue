@@ -9,8 +9,10 @@
 </template>
 
 <script>
+    import driver from '@/mixins/useDriver'
     export default {
-        name: ""
+        name: "",
+        mixins: [driver]
     }
 </script>
 

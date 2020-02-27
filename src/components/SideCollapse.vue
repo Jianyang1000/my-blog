@@ -12,12 +12,12 @@
     export default {
         computed: {
             opend(){
-                return this.$store.state.opend
+                return this.$store.state.app.opend
             },
         },
         methods: {
             toggleOpen() {
-                this.$store.commit('toggleOpen', !this.opend)
+                this.$store.commit('app/toggleOpen', !this.opend)
             }
         }
     }

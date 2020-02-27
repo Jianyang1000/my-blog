@@ -21,6 +21,7 @@
 </template>
 
 <script>
+    import {currencyRoutes} from '@/router'
     import SidebarItem from './SidebarItem'
     export default {
         name: "Layout",
@@ -30,18 +31,18 @@
 
         computed: {
             opend(){
-                return this.$store.state.opend
+                return this.$store.state.app.opend
             },
             routes(){
-                return this.$store.state.routes
+                return this.$store.state.app.routes
             }
         },
         created() {
-
+            this.$store.commit('app/SET_ROUTES',currencyRoutes)
         },
         methods: {
             toggleOpen(){
-                this.$store.commit('toggleOpen',!this.opend)
+                this.$store.commit('app/toggleOpen',!this.opend)
             }
         }
     }

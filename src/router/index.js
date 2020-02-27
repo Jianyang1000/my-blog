@@ -9,6 +9,12 @@ Vue.use(VueRouter)
 
 export const currencyRoutes = [
   {
+    path: '/list',
+    name: 'List',
+    component: List,
+    hidden: true
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login'),

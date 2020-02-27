@@ -26,7 +26,11 @@
 <script>
     export default {
         name: "",
-
+        methods: {
+            _loginOut() {
+                this.$store.dispatch('user/loginOut')
+            }
+        }
     }
 </script>
 
