@@ -14,6 +14,7 @@
     "driver.js": "^0.9.8",
     "element-ui": "^2.13.0",
     "express": "^4.17.1",
+    "marked": "^0.8.0",
     "mavon-editor": "^2.7.7",
     "mongoose": "^5.8.11",
     "sass": "^1.25.0",

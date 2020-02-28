@@ -26,7 +26,6 @@
         position: fixed;
         left: 200px;
         top: 50px;
-        padding: 30px 36px;
         box-sizing: border-box;
         transition: all 0.3s ease-in-out;
         overflow: auto;

@@ -7,6 +7,8 @@ import DashBoard from '../views/dashboard'
 
 Vue.use(VueRouter)
 
+
+
 export const currencyRoutes = [
   {
     path: '/list',
@@ -37,6 +39,21 @@ export const currencyRoutes = [
         name: 'Dashboard',
         component: () => import('@/views/dashboard'),
         meta: { title: '首页', icon: 'el-icon-s-data' }
+      }
+    ]
+  },
+  {
+    path: '/personal',
+    name: 'Personal',
+    component: Layout,
+    redirect: '/personal/index',
+    children: [
+      {
+        path: 'index',
+        name: 'Personal-index',
+        component: () => import('@/views/personal'),
+        meta: { title: '个人中心' },
+        hidden: true
       }
     ]
   },
@@ -124,6 +141,21 @@ export const currencyRoutes = [
     ]
   }
 ]
+
+const creatRouter = () => {
+  return new VueRouter({
+    routes: currencyRoutes,
+    scrollBehavior() {
+      return { x: 0, y: 0 }
+    }
+  })
+}
+
+export function resetRouter() {
+  const reset = creatRouter()
+  router.matcher = reset.matcher
+}
+
 
 const router = new VueRouter({
   routes:currencyRoutes

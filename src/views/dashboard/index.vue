@@ -85,7 +85,7 @@
             }
         },
         methods: {
-            getCardCountList() {
+            /*getCardCountList() {
                 getCardCount()
                     .then((response) => {
                         let cardCount = response.data
@@ -98,7 +98,7 @@
                     .catch((error) => {
                         console.log(error);
                     })
-            },
+            },*/
             getLatestArticleInfo() {
                 getLatestArticle()
                     .then((result) => {
@@ -111,16 +111,18 @@
         },
         created() {
             this.getLatestArticleInfo()
-            this.getCardCountList()
+            /*this.getCardCountList()*/
         },
     }
 </script>
 
 <style scoped lang="scss">
+    .dashboardWrap {
+        padding: 36px 30px;
+    }
     .dashboardTag {
         display: flex;
         flex-wrap: wrap;
-
 
     }
 

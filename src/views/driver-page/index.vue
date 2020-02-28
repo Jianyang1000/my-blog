@@ -18,6 +18,7 @@
 
 <style scoped lang="scss">
     .driver {
+        padding: 36px 30px;
         .driverWord {
             font-size: 14px;
             margin-bottom: 20px;

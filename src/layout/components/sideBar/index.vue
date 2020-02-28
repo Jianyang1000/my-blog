@@ -2,7 +2,7 @@
     <div class="sideBar" :class="{closeBar:opend}">
         <el-scrollbar>
             <el-menu
-                    default-active="1"
+                    :default-active="activeMenu"
                     class="el-menu-vertical-demo"
                     background-color="#3a3f51"
                     text-color="#b5b6bd"
@@ -35,6 +35,9 @@
             },
             routes(){
                 return this.$store.state.app.routes
+            },
+            activeMenu() {
+                return this.$route.path
             }
         },
         created() {

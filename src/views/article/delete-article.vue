@@ -107,6 +107,9 @@
 </script>
 
 <style scoped lang="scss">
+    #article-deleted {
+        padding: 36px 30px;
+    }
     .header {
         display: flex;
         justify-content: flex-start;

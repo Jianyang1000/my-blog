@@ -5,8 +5,8 @@
                 发布文章
                 <div class="action-btn-wrap">
                     <span v-if="true">发布<!--@click="publish"--></span>
-                    <span v-if="true">提交</span><!--@click="modify"-->
-                    <span v-if="true">保存</span><!--@click="save"-->
+                    <!--<span v-if="true">提交</span>&lt;!&ndash;@click="modify"&ndash;&gt;
+                    <span v-if="true">保存</span>&lt;!&ndash;@click="save"&ndash;&gt;-->
                 </div>
             </div>
             <div class="input-wrap">
@@ -128,6 +128,9 @@
 
 <style scoped lang="scss">
     @import '@/style/variables';
+    .addArticle {
+        padding: 36px 30px;
+    }
     .header-wrap {
         display: flex;
         justify-content: space-between;

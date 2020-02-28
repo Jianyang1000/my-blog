@@ -1,5 +1,5 @@
 <template>
-    <div class="className">
+    <div class="manage_article">
         <el-card class="anoCard">
             <div slot="header" class="header">
                 <span>文章管理 (共计: 6篇)</span>
@@ -95,6 +95,9 @@
 </script>
 
 <style scoped lang="scss">
+    .manage_article {
+        padding: 36px 30px;
+    }
     .header {
         display: flex;
         justify-content: flex-start;
