@@ -16,7 +16,8 @@
                 <el-button
                         type="primary"
                         icon="el-icon-circle-plus-outline"
-                >添加</el-button>
+                >添加
+                </el-button>
             </div>
             <el-table :data="articleLists" border stripe>
                 <el-table-column prop="title" label="标题" min-width="200"></el-table-column>
@@ -36,15 +37,19 @@
                         <el-button
                                 type="success"
 
-                        >查看</el-button>
+                        >查看
+                        </el-button>
                         <el-button
                                 type="primary"
 
-                        >编辑</el-button
+                        >编辑
+                        </el-button
                         >
                         <el-button
                                 type="danger"
-                        >删除</el-button
+                                @click="deleteArticleInfo(scope.row['_id'])"
+                        >删除
+                        </el-button
                         >
                     </template>
                 </el-table-column>
@@ -67,28 +72,43 @@
 </template>
 
 <script>
-    import {getManageArticleList} from '@/api/article'
+    import {getManageArticleList, deleteArticle} from '@/api/article'
+
     export default {
         name: "manage_article",
-        methods: {
-
-        },
-        data(){
+        data() {
             return {
                 articleKey: '',
-                articleLists:[]
+                articleLists: []
             }
         },
         methods: {
-          getArticle(){
-              getManageArticleList().then((results) => {
-                  this.articleLists = results.data
-              }).catch((error) => {
-                  console.log(error);
-              })
-          }
+            deleteArticleInfo(id) {
+                this.$confirm("此操作将永久删除该文件, 是否继续?", '提示', {type: "warning"})
+                    .then(() => {
+                        deleteArticle(id)
+                            .then((response) => {
+                                this.$message.success({message:'删除成功!'})
+                                this.getArticle()
+                            })
+                            .catch((error) => {
+                                this.$message.error({message:error})
+                            })
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+
+            },
+            getArticle() {
+                getManageArticleList().then((results) => {
+                    this.articleLists = results.data
+                }).catch((error) => {
+                    console.log(error);
+                })
+            }
         },
-        created(){
+        created() {
             this.getArticle()
         }
     }
@@ -98,6 +118,7 @@
     .manage_article {
         padding: 36px 30px;
     }
+
     .header {
         display: flex;
         justify-content: flex-start;
@@ -105,17 +126,21 @@
         font-size: 20px;
         font-weight: bold;
     }
+
     .searchBar {
         display: flex;
         margin-bottom: 20px;
+
         > div {
-            width:180px;
+            width: 180px;
             margin-right: 10px;
         }
     }
+
     .pagination {
         margin-top: 30px;
     }
+
     .el-button {
         padding: 8px 12px;
     }

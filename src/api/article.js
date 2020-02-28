@@ -39,9 +39,35 @@ export function getArticleCount(){
     })
 }
 
+/*
+*   获取垃圾箱文章数量
+* */
 export function getDeleteCount(){
     return request({
         url:'/api/dashboard/delete_count',
+        method: 'get'
+    })
+}
+
+/*
+* 发布文章
+* */
+
+export function publishArticle(data){
+    return request({
+        url: '/api/publish_article',
+        method: 'post',
+        data: data
+    })
+}
+
+/*
+* 删除文章
+* */
+
+export function deleteArticle(id){
+    return request({
+        url: `/api/delete_article/${id}`,
         method: 'get'
     })
 }

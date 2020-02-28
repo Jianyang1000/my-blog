@@ -4,7 +4,7 @@
             <div class="header-wrap">
                 发布文章
                 <div class="action-btn-wrap">
-                    <span v-if="true">发布<!--@click="publish"--></span>
+                    <span @click="publish" v-if="true">发布</span>
                     <!--<span v-if="true">提交</span>&lt;!&ndash;@click="modify"&ndash;&gt;
                     <span v-if="true">保存</span>&lt;!&ndash;@click="save"&ndash;&gt;-->
                 </div>
@@ -27,7 +27,7 @@
                     </el-input>
                     <div class="label-wrap">
                         <span>阅读加密：</span>
-                        <el-checkbox v-model="isEncrypt" size="large"></el-checkbox>
+                        <el-checkbox v-model="article.isEncrypt" size="large"></el-checkbox>
                     </div>
                     <div class="label-wrap">
                         <span>分类：</span>
@@ -65,7 +65,7 @@
                 </div>
             </div>
             <mavon-editor class="editor"
-                          v-model="value"
+                          v-model="article.content"
                           ref=md
 
                           :boxShadow="false"
@@ -107,27 +107,123 @@
 </template>
 
 <script>
+    import {
+        mapActions,
+        mapGetters
+    } from 'vuex'
+    import {publishArticle} from '@/api/article'
+    import { markdown } from '@/utils/markdown'
+    /*import UP from 'COMMON/upload/upCover.vue'*/
     export default {
-        name: "",
+        name: "addArticle",
         data() {
             return {
-                value: '123',
-                categoryList: [],
-                tagList: [],
                 article: {
                     content: '',
                     title: '',
                     cover: '',
                     subMessage: '',
-                    isEncrypt: '0'
+                    is_encrypt: 0,
+
                 },
+                tags: [],
+                category: '',
+                tagList :[],
+                categoryList: []
             }
+        },
+        methods: {
+            ...mapActions([
+                'getQiniuToken',
+                'uploadToQiniu',
+                'getArticle',
+                'getCategoryList',
+                'getTagList',
+                'saveArticle',
+                'publishArticle',
+                'modifyArticle'
+            ]),
+            markdownHtml(str) {
+                return markdown(str)
+            },
+            getParams() {
+                let html = this.markdownHtml(this.article.content)
+                let params = {
+                    title: this.article.title,
+                    cover: this.article.cover,
+                    sub_message: this.article.subMessage,
+                    is_encrypt: this.is_encrypt ? '1' : '0',
+                    content: this.article.content,
+                    html_content: html,
+                    page_view: 0,
+                    status: 0
+                }
+                params.category = this.getCategory()
+                params.tags = this.getTags()
+                if (this.article.id) {
+                    params.id = this.article.id
+                }
+                return params
+            },
+            publish() {
+                let params = this.getParams()
+                if (!params.title) {
+                    this.$message.error({message: '文章标题不能为空!'});
+                    return
+                }
+                if (!params.sub_message) {
+                    this.$message.error({message: '文章简介不能为空!'});
+                    return
+                }
+                if (!params.content) {
+                    this.$message.error({message: '文章内容不能为空!'});
+                    return
+                }
+                console.log(params);
+                publishArticle(params)
+                    .then((response) => {
+                        this.$message.success({message: '已发布!'});
+                        /*this.updateRoute('articlePreview', data)*/
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        this.$message.error({message: error});
+                    })
+            },
+            getCategory() {
+                let category = this.categoryList.find(item => item.categoryName === this.category)
+                if (category) {
+                    return ''/*{id: category.categoryId}*/
+                } else {
+                    return ''/*{name: this.category}*/
+                }
+            },
+            getTags() {
+                let tags = []
+                this.tags.forEach(value => {
+                    let tag = this.tagList.find(item => item.tagName === value)
+                    if (tag) {
+                        tags.push({id: tag.tagId})
+                    } else {
+                        tags.push({name: value})
+                    }
+                })
+                return tags
+            },
+            /*updateRoute(name, articleId) {
+                this.$router.push({
+                    name: name,
+                    query: {
+                        id: articleId
+                    }
+                })
+            }*/
         }
     }
 </script>
 
 <style scoped lang="scss">
-    @import '@/style/variables';
+    @import '../../style/variables';
     .addArticle {
         padding: 36px 30px;
     }

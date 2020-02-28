@@ -85,26 +85,39 @@ router.put("/article/:id", (req, res) => {
         .catch(err => res.json(err));
 });
 
-
-router.post("/article", (request, response) => {
-    Article.create(request.body, (err, hero) => {
-        if (err) {
-            response.json(err);
+// 发布文章
+router.post("/publish_article", (request, response) => {
+    const data = request.body
+    const articleBaseInfo = {
+        created_time: new Date().getTime(),
+        delete_time: '',
+        updated_time: ''
+    }
+    const articleInfo = Object.assign(data,articleBaseInfo)
+    console.log(articleInfo);
+    Article.create(articleInfo, (error, article) => {
+        if (error) {
+            response.json(error);
         } else {
-            response.json(hero);
+            response.json({
+                code: 20000,
+                data: article
+            });
         }
     });
 });
 
-router.delete("/hero/:id", (request, response) => {
+// 删除文章
+router.get("/delete_article/:id", (request, response) => {
     Article.findOneAndRemove({
         _id: request.params.id
     })
-        .then(article => res.send(`${article.title}删除成功`))
-        .catch(err => res.json(err));
+        .then(article => response.json({
+            code: 20000,
+            data: article
+        }))
+        .catch(err => response.json(err));
 });
-
-
 
 
 module.exports = router;
