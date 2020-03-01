@@ -20,28 +20,31 @@
                 </el-button>
             </div>
             <el-table :data="articleLists" border stripe>
-                <el-table-column prop="title" label="标题" min-width="200"></el-table-column>
-                <el-table-column prop="cover" label="封面图"></el-table-column>
+                <el-table-column prop="title" label="标题" min-width="130"></el-table-column>
+                <el-table-column prop="cover" label="封面图" min-width="80">
+                    <template slot-scope="scope">
+                        <img v-if="scope.row.cover" :src="scope.row.cover" alt="image" class="smallImage"/>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="category" label="分类"></el-table-column>
-                <el-table-column prop="tag" label="标签"></el-table-column>
-                <el-table-column prop="is_encrypt" label="加密"></el-table-column>
-                <el-table-column
-                        prop="page_view"
-                        label="浏览次数"
-                        width="210"
-                ></el-table-column>
-                <el-table-column prop="created_time" label="发布时间"></el-table-column>
-                <el-table-column prop="updated_time" label="修改时间"></el-table-column>
-                <el-table-column label="操作" width="300">
+                <el-table-column prop="tag" label="标签" :formatter="formatterTag"></el-table-column>
+                <el-table-column prop="is_encrypt" label="加密">
+                    <template slot-scope="scope">
+                        {{ scope.row.is_encrypt == '0' ? '否' : '是' }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="page_view" label="浏览次数"></el-table-column>
+                <el-table-column prop="created_time" width="180" label="发布时间"></el-table-column>
+                <el-table-column label="操作" width="300" fixed="right">
                     <template slot-scope="scope">
                         <el-button
                                 type="success"
-
+                                @click="toDetail(scope.row['_id'])"
                         >查看
                         </el-button>
                         <el-button
                                 type="primary"
-
+                                @click="toEdit(scope.row['_id'])"
                         >编辑
                         </el-button
                         >
@@ -73,6 +76,7 @@
 
 <script>
     import {getManageArticleList, deleteArticle} from '@/api/article'
+    import {formatDate} from "../../utils/formatDate";
 
     export default {
         name: "manage_article",
@@ -83,28 +87,49 @@
             }
         },
         methods: {
+            formatterTag(row, column){
+                return row.tag.join('  ')
+            },
             deleteArticleInfo(id) {
                 this.$confirm("此操作将永久删除该文件, 是否继续?", '提示', {type: "warning"})
                     .then(() => {
                         deleteArticle(id)
                             .then((response) => {
-                                this.$message.success({message:'删除成功!'})
+                                this.$message.success({message: '删除成功!'})
                                 this.getArticle()
                             })
                             .catch((error) => {
-                                this.$message.error({message:error})
+                                this.$message.error({message: error})
                             })
                     })
                     .catch((error) => {
                         console.log(error);
                     })
-
             },
             getArticle() {
                 getManageArticleList().then((results) => {
+                    results.data.forEach((article) => {
+                        article.created_time = formatDate(new Date(article.created_time))
+                    })
                     this.articleLists = results.data
                 }).catch((error) => {
                     console.log(error);
+                })
+            },
+            toDetail(id) {
+                this.$router.push({
+                    path: `/article_detail`,
+                    query: {
+                        id: id
+                    }
+                })
+            },
+            toEdit(id) {
+                this.$router.push({
+                    path: `/article/add`,
+                    query: {
+                        id: id
+                    }
                 })
             }
         },
@@ -143,5 +168,9 @@
 
     .el-button {
         padding: 8px 12px;
+    }
+    .smallImage {
+        width: 80%;
+
     }
 </style>

@@ -4,13 +4,22 @@
             <div class="header-wrap">
                 发布文章
                 <div class="action-btn-wrap">
-                    <span @click="publish" v-if="true">发布</span>
-                    <!--<span v-if="true">提交</span>&lt;!&ndash;@click="modify"&ndash;&gt;
-                    <span v-if="true">保存</span>&lt;!&ndash;@click="save"&ndash;&gt;-->
+                    <span @click="publish" v-if="!articleId">发布</span>
+                    <span @click="save" v-if="articleId">保存</span>
                 </div>
             </div>
             <div class="input-wrap">
+
                 <div class="fix-input-wrap">
+                    <UP class="upload-cover"
+                        :default-img="article.cover"
+                        ratio="2"
+                        WHRatio="2"
+                        maxWidth="300"
+                        maxHeight="150"
+                        tip="上传文章封面图"
+                        maxSize="2"
+                        @uploadSuccess="uploadSuccess"></UP>
                     <el-input
                             class="input-title"
                             v-model="article.title"
@@ -27,7 +36,7 @@
                     </el-input>
                     <div class="label-wrap">
                         <span>阅读加密：</span>
-                        <el-checkbox v-model="article.isEncrypt" size="large"></el-checkbox>
+                        <el-checkbox v-model="article.is_encrypt" size="large"></el-checkbox>
                     </div>
                     <div class="label-wrap">
                         <span>分类：</span>
@@ -39,9 +48,9 @@
                                 placeholder="请选择文章分类">
                             <el-option
                                     v-for="item in categoryList"
-                                    :key="item.categoryId"
-                                    :label="item.categoryName"
-                                    :value="item.categoryName">
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.name">
                             </el-option>
                         </el-select>
                     </div>
@@ -56,9 +65,9 @@
                                 placeholder="请选择文章标签">
                             <el-option
                                     v-for="item in tagList"
-                                    :key="item.tagId"
-                                    :label="item.tagName"
-                                    :value="item.tagName">
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.name">
                             </el-option>
                         </el-select>
                     </div>
@@ -111,25 +120,32 @@
         mapActions,
         mapGetters
     } from 'vuex'
-    import {publishArticle} from '@/api/article'
-    import { markdown } from '@/utils/markdown'
-    /*import UP from 'COMMON/upload/upCover.vue'*/
+    import {getTag,getCategory} from "../../api/tag_category";
+    import {publishArticle,editArticle} from '@/api/article'
+    import {markdown,formatDate} from '@/utils/markdown'
+    import UP from '@/components/upload/upCover.vue'
+
     export default {
         name: "addArticle",
+        components: {
+            'UP': UP
+        },
         data() {
             return {
+                articleId: '',
                 article: {
                     content: '',
                     title: '',
                     cover: '',
                     subMessage: '',
-                    is_encrypt: 0,
-
+                    is_encrypt: '',
                 },
                 tags: [],
                 category: '',
-                tagList :[],
-                categoryList: []
+                tagList: [],
+                categoryList: [],
+                accessKey: '9zMRpUgazU_jd9Jpq3Cel3fyFF7D5xAp_KlOpqd7',
+                secretKey: 'aFi5jH7EXqffyILnGKwjvYMOCl1IG7n1ww_P0voK'
             }
         },
         methods: {
@@ -143,6 +159,18 @@
                 'publishArticle',
                 'modifyArticle'
             ]),
+            uploadTest(){
+                var mac = new qiniu.auth.digest.Mac(this.accessKey, this.secretKey);
+            },
+            uploadSuccess(image){
+
+                let imgUrl = 'http://q6gpc1mpo.bkt.clouddn.com/' + image
+                this.article.cover = imgUrl
+            },
+            init(){
+                this.getTagList()
+                this.getCategoryList()
+            },
             markdownHtml(str) {
                 return markdown(str)
             },
@@ -152,14 +180,14 @@
                     title: this.article.title,
                     cover: this.article.cover,
                     sub_message: this.article.subMessage,
-                    is_encrypt: this.is_encrypt ? '1' : '0',
+                    is_encrypt: this.article.is_encrypt ? '1' : '0',
                     content: this.article.content,
                     html_content: html,
                     page_view: 0,
                     status: 0
                 }
-                params.category = this.getCategory()
-                params.tags = this.getTags()
+                params.category = this.articleCategory()
+                params.tag = this.articleTags()
                 if (this.article.id) {
                     params.id = this.article.id
                 }
@@ -179,54 +207,91 @@
                     this.$message.error({message: '文章内容不能为空!'});
                     return
                 }
-                console.log(params);
                 publishArticle(params)
                     .then((response) => {
                         this.$message.success({message: '已发布!'});
                         /*this.updateRoute('articlePreview', data)*/
                     })
                     .catch((error) => {
-                        console.log(error);
                         this.$message.error({message: error});
                     })
             },
-            getCategory() {
-                let category = this.categoryList.find(item => item.categoryName === this.category)
+            save() {
+                let params = this.getParams()
+                if (!params.title) {
+                    this.$message.error({message: '文章标题不能为空!'});
+                    return
+                }
+                if (!params.sub_message) {
+                    this.$message.error({message: '文章简介不能为空!'});
+                    return
+                }
+                if (!params.content) {
+                    this.$message.error({message: '文章内容不能为空!'});
+                    return
+                }
+                editArticle()
+                    .then(() => {
+                        this.$message.success({message: '修改成功!'});
+                    })
+                    .catch(() => {
+                        this.$message.error({message: error});
+                    })
+            },
+            articleCategory() {
+                let category = this.categoryList.find(item => item.name === this.category)
                 if (category) {
-                    return ''/*{id: category.categoryId}*/
+                    return category.name
                 } else {
-                    return ''/*{name: this.category}*/
+                    return ''
                 }
             },
-            getTags() {
+            articleTags() {
                 let tags = []
                 this.tags.forEach(value => {
-                    let tag = this.tagList.find(item => item.tagName === value)
+                    console.log(value);
+                    let tag = this.tagList.find(item => item.name === value)
                     if (tag) {
-                        tags.push({id: tag.tagId})
-                    } else {
-                        tags.push({name: value})
+                        tags.push(tag.name)
                     }
                 })
+                console.log(tags);
                 return tags
             },
-            /*updateRoute(name, articleId) {
-                this.$router.push({
-                    name: name,
-                    query: {
-                        id: articleId
-                    }
-                })
-            }*/
+            getTagList(){
+                getTag()
+                    .then((response) => {
+                        const tagList = response.data
+                        this.tagList = tagList
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+            },
+            getCategoryList(){
+                getCategory()
+                    .then((response) => {
+                        const categoryList = response.data
+                        this.categoryList = categoryList
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+            }
+        },
+        created() {
+          this.init()
         }
     }
 </script>
 
 <style scoped lang="scss">
     @import '../../style/variables';
+
     .addArticle {
         padding: 36px 30px;
     }
+
     .header-wrap {
         display: flex;
         justify-content: space-between;
@@ -235,6 +300,7 @@
         align-items: center;
         padding: 18px 18px 18px 0;
         background-color: $color-white;
+
         .action-btn-wrap {
             > span {
                 padding: 5px 10px;
@@ -244,33 +310,40 @@
                 background-color: $color-main;
                 color: $color-white;
                 border-radius: 8px;
-                &:hover{
-                    background-color: lighten($color-main, 10%)
+
+                &:hover {
+                    background-color: lighten($color-main, 10%);
                 }
+
                 &:last-child {
-                    margin-right: 0px
+                    margin-right: 0px;
                 }
             }
         }
     }
+
     .input-wrap {
         .fix-input-wrap > div {
             margin-bottom: 10px;
             text-align: left;
         }
+
         .label-wrap {
             display: flex;
             align-items: center;
             font-size: 16px;
             width: 100%;
             color: #606266;
+
             > span {
                 flex-shrink: 0;
             }
+
             > div {
                 width: 100%;
 
             }
+
             .el-checkbox__inner {
                 width: 16px !important;
                 height: 16px !important;
@@ -278,6 +351,7 @@
         }
 
     }
+
     .edit_wrap {
 
     }

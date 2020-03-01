@@ -5,8 +5,8 @@ mongoose.connect('mongodb://localhost:27017/blog',{ useNewUrlParser: true })
 const articleSchema = mongoose.Schema({
     title :String,
     created_time: Date,
-    delete_time: Date,
-    updated_time: Date,
+    delete_time: String,
+    updated_time: String,
     status: Number,
     content: String,
     html_content: String,

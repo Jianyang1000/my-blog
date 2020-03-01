@@ -27,6 +27,7 @@ router.get('/user',(request,response) => {
 
 
 router.post('/user/login',(request,response) => {
+    console.log(1123)
     User.find(request.body)
         .then(user => {
             if(user.length > 0) {

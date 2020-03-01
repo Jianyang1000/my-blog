@@ -25,7 +25,7 @@
 
                 ></el-table-column>
                 <el-table-column prop="created_time" label="注册时间"></el-table-column>
-                <el-table-column label="操作" width="300">
+                <el-table-column label="操作" width="300" fixed="right">
                     <template slot-scope="scope">
                         <el-button
                                 type="primary"
@@ -233,6 +233,9 @@
 </script>
 
 <style scoped lang="scss">
+    .user {
+        padding: 36px 30px;
+    }
     .header {
         display: flex;
         justify-content: flex-start;

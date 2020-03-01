@@ -77,6 +77,9 @@
 </script>
 
 <style scoped lang="scss">
+    .comment {
+        padding: 36px 30px;
+    }
     .header {
         display: flex;
         justify-content: flex-start;

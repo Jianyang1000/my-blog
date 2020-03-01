@@ -5,6 +5,8 @@ const router = express.Router();
 //引入数据模型模块
 const Article = require("../models/article");
 
+const qiniu = require('qiniu')
+
 router.get('/article',(request,response) => {
     Article.find({})
         .sort({ update_at: -1 })
@@ -89,7 +91,7 @@ router.put("/article/:id", (req, res) => {
 router.post("/publish_article", (request, response) => {
     const data = request.body
     const articleBaseInfo = {
-        created_time: new Date().getTime(),
+        created_time: new Date(),
         delete_time: '',
         updated_time: ''
     }
@@ -119,5 +121,38 @@ router.get("/delete_article/:id", (request, response) => {
         .catch(err => response.json(err));
 });
 
+
+
+// 获取文章详情
+router.get("/article_detail/:id",(request, response) => {
+    Article.find({
+        _id: request.params.id
+    })
+        .then((article) => {
+            response.json({
+                code: 20000,
+                data: article
+            })
+        })
+        .catch((error) => {
+            response.json(error)
+        })
+})
+
+router.get('/qiniu_token',(request, response) => {
+    let accessKey = '9zMRpUgazU_jd9Jpq3Cel3fyFF7D5xAp_KlOpqd7';
+    let secretKey = 'aFi5jH7EXqffyILnGKwjvYMOCl1IG7n1ww_P0voK';
+    let mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
+    let bucket = 'liujianyang-blog'
+    let options = {
+        scope: bucket,
+    };
+    let putPolicy = new qiniu.rs.PutPolicy(options);
+    let uploadToken=putPolicy.uploadToken(mac);
+    response.json({
+        code: 20000,
+        data: {token:uploadToken}
+    })
+})
 
 module.exports = router;

@@ -1,10 +1,7 @@
 <template>
     <div class="pageMain" :class="{closeBar:opend}">
         <transition name="fade-page" mode="out-in">
-            <keep-alive>
-                <router-view v-if="true"></router-view>
-            </keep-alive>
-            <router-view v-if="false"></router-view>
+            <router-view></router-view>
         </transition>
     </div>
 </template>

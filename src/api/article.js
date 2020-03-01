@@ -71,3 +71,14 @@ export function deleteArticle(id){
         method: 'get'
     })
 }
+
+/*
+* 获得文章详细信息
+* */
+
+export function articleDetail(id) {
+    return request({
+        url: `/api/article_detail/${id}`,
+        method: 'get'
+    })
+}

@@ -4,7 +4,10 @@ import {currencyRoutes} from '@/router'
 const state = {
     opend: false,
     routes: currencyRoutes,
-    message: false
+    message: false,
+    articleMenu: false,
+    articleMenuSource: [],
+    articleMenuTag: '1.',
 }
 
 const mutations = {
@@ -21,6 +24,15 @@ const mutations = {
 }
 
 const actions = {
+    setArticleMenu (store, articleMenu) {
+        store.state.articleMenu = articleMenu
+    },
+    setArticleMenuSource (store, articleMenuSource) {
+        store.state.articleMenuSource = articleMenuSource
+    },
+    setArticleMenuTag (store, articleMenuTag) {
+        store.state.articleMenuTag = articleMenuTag
+    },
 
 }
 

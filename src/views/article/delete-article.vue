@@ -40,7 +40,7 @@
                         label="删除时间"
                         width="128">
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" fixed="right">
                     <template slot-scope="scope">
                         <el-button
                                 type="primary"

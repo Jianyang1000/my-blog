@@ -388,6 +388,9 @@
 </script>
 
 <style scoped lang="scss">
+    .tag {
+        padding: 36px 30px;
+    }
     .addTag {
         text-align: left;
         font-size: 16px;

@@ -7,7 +7,8 @@
  * @Description: formatDate
  */
 
-const formatDate = date => {
+export function formatDate(date){
+    console.log(date);
     let y = date.getFullYear();
     let m = date.getMonth() + 1;
     m = m < 10 ? "0" + m : m;
@@ -19,7 +20,5 @@ const formatDate = date => {
     minute = minute < 10 ? "0" + minute : minute;
     let second = date.getSeconds();
     second = second < 10 ? "0" + second : second;
-    return y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
+    return y + "年" + m + "月" + d + "日";
 }
-
-module.exports = formatDate;
