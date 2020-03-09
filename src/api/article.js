@@ -7,11 +7,16 @@ export function getLatestArticle() {
     })
 }
 
-
-
 export function getManageArticleList() {
     return request({
         url: '/api/manage_article',
+        method: 'get'
+    })
+}
+
+export function getArticleList(){
+    return request({
+        url: '/api/article',
         method: 'get'
     })
 }
@@ -81,4 +86,26 @@ export function articleDetail(id) {
         url: `/api/article_detail/${id}`,
         method: 'get'
     })
+}
+
+
+/*
+* 保存md图片
+* */
+
+export function articleMdImage(id,data){
+    return request({
+        url: `/api/article_edit/${id}`,
+        method: 'post',
+        data: data
+    })
+}
+
+
+/*
+* 编辑文章
+* */
+
+export function editArticle(formData){
+
 }

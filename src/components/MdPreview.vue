@@ -1,7 +1,8 @@
 <template>
     <div class="article_content">
+        <slot></slot>
         <link rel="stylesheet" href="//cdn.bootcss.com/github-markdown-css/2.4.1/github-markdown.css">
-        <div class="markdown-body" id="markdown-preview-body" v-html="content"></div>
+        <div class="markdown-body" id="markdown-preview-body" v-html="contents" v-highlight></div>
     </div>
 </template>
 
@@ -11,7 +12,7 @@
     } from 'vuex'
     export default {
         name: "md-preview",
-        prop: ['content'],
+        props: ['contents'],
         data(){
             return {
                 imgList: []
@@ -20,11 +21,11 @@
         watch: {
             contents (content) {
                 this.setArticleMenu(false)
-                setTimeout(this.init, 1000)
+                setTimeout(this.init, 300)
             }
         },
         methods: {
-            ...mapActions([
+            ...mapActions('app/',[
                 'setArticleMenu',
                 'setArticleMenuSource',
                 'setArticleMenuTag'

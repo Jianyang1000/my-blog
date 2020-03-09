@@ -34,7 +34,7 @@
         .userInfoWrap {
             height: 230px;
             width: 100%;
-            background: url(../../assets/personal/personBg.jpg) no-repeat center center;
+            background: url('../../../assets/personal/personBg.jpg') no-repeat center center;
             background-size: cover;
             color: #58666e;
             .userInfo {

@@ -6,7 +6,9 @@ const router = express.Router();
 const Tag = require("../models/tag");
 const Category = require('../models/category')
 
-
+/*
+* 服务端获取标签
+* */
 router.get('/tag', (request, response) => {
 
     const authorization = request.get('authorization')
@@ -29,6 +31,10 @@ router.get('/tag', (request, response) => {
         });
 })
 
+/*
+* 服务端获取分类
+* */
+
 router.get('/category', (request, response) => {
     const authorization = request.get('authorization')
     if (!authorization) {
@@ -49,6 +55,43 @@ router.get('/category', (request, response) => {
             response.json(err);
         });
 })
+
+
+/*
+* 客户端获取标签
+* */
+router.get('/blog_tag', (request, response) => {
+    Tag.find({})
+        .sort({update_at: -1})
+        .then(Tags => {
+            response.json({
+                data: Tags,
+                code: 20000
+            });
+        })
+        .catch(err => {
+            response.json(err);
+        });
+})
+
+/*
+* 客户端获取分类
+* */
+
+router.get('/blog_category', (request, response) => {
+    Category.find({})
+        .sort({update_at: -1})
+        .then(Categories => {
+            response.json({
+                data: Categories,
+                code: 20000
+            });
+        })
+        .catch(err => {
+            response.json(err);
+        });
+})
+
 
 router.post('/tag', (request, response) => {
     console.log('post enter')
@@ -90,7 +133,6 @@ router.post('/category', (request, response) => {
 })
 
 router.put('/category/:id', (request, response) => {
-    console.log(request.body);
     Category.findOneAndUpdate(
         {_id: request.params.id},
         {

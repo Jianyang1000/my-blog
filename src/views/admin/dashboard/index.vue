@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import {getLatestArticle, getCardCount} from "../../api/article";
+    import {getLatestArticle, getCardCount} from "@/api/article";
     import IconCard from './components/iconCard'
 
     export default {
@@ -102,6 +102,7 @@
             getLatestArticleInfo() {
                 getLatestArticle()
                     .then((result) => {
+                        console.log(result);
                         this.articleLists = result.data.articles
                     })
                     .catch((error) => {

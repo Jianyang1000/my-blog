@@ -102,6 +102,7 @@ router.post('/user', (request,response) => {
     const data = request.body
     const userBaseInfo = {
         created_time: new Date().getTime(),
+        access_token: ''
     }
     const userInfo = Object.assign(data,userBaseInfo)
     User.create(userInfo,(error,user) => {

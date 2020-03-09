@@ -158,7 +158,7 @@
         deleteTag,
         updateCategory,
         updateTag
-    } from "../../api/tag_category";
+    } from "@/api/tag_category";
 
     export default {
         name: "Tag",

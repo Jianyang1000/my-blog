@@ -219,6 +219,6 @@
         width: 360px;
         box-shadow: -3px -3px 8px rgba(0, 0, 0, 0.2);
         background-color: $white;
-        z-index: 990;
+        z-home: 990;
     }*/
 </style>

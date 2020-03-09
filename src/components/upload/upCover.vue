@@ -129,11 +129,19 @@
             },
             finishCropImage (newFile) {
                 this.newFile = newFile
-                getQiniuToken()
-                    .then((response) => {
-                        this.token = response.data
-                        this.$refs.upload.submit()
-                    })
+                if(this.$store.state.app.qiniuToken === ''){
+                    getQiniuToken()
+                        .then((response) => {
+                            this.token = response.data
+
+                            this.$store.state.app.qiniuToken = response.data
+                            this.$refs.upload.submit()
+                        })
+                } else {
+                    this.token = this.$store.state.app.qiniuToken
+                    this.$refs.upload.submit()
+                }
+
             },
             handleAvatarSuccess (response, file) {
                 this.$emit('uploadSuccess', response.hash)

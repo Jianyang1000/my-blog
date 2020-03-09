@@ -222,7 +222,7 @@
     }
 </script>
 
-<style scoped lang="less">
+<style scoped lang="scss">
     .list {
         width: 1200px;
         margin: 0 auto;

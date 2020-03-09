@@ -76,7 +76,7 @@
 
 <script>
     import {getManageArticleList, deleteArticle} from '@/api/article'
-    import {formatDate} from "../../utils/formatDate";
+    import {formatDate} from "@/utils/formatDate";
 
     export default {
         name: "manage_article",
@@ -171,6 +171,5 @@
     }
     .smallImage {
         width: 80%;
-
     }
 </style>

@@ -12,7 +12,7 @@
                 </div>
                 <div class="articleSubMessage">{{sub_message}}</div>
             </div>
-
+            <md-preview :contents="htmlContent"></md-preview>
         </div>
 
     </div>
@@ -20,10 +20,14 @@
 
 
 <script>
+    import MdPreview from "../../../components/MdPreview";
     import {articleDetail} from "@/api/article";
     import {formatDate} from '@/utils/formatDate'
     export default {
         name: "detail-article",
+        components: {
+            'md-preview': MdPreview
+        },
         data(){
             return {
                 title: '',

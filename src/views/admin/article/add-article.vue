@@ -76,10 +76,12 @@
             <mavon-editor class="editor"
                           v-model="article.content"
                           ref=md
-
+                          @imgAdd="handleEditorImgAdd"
+                          @imgDel="handleEditorImgDel"
                           :boxShadow="false"
                           defaultOpen="edit"
                           :toolbars="{
+
           bold: true, // 粗体
           italic: true, // 斜体
           header: true, // 标题
@@ -120,10 +122,11 @@
         mapActions,
         mapGetters
     } from 'vuex'
-    import {getTag,getCategory} from "../../api/tag_category";
-    import {publishArticle,editArticle} from '@/api/article'
-    import {markdown,formatDate} from '@/utils/markdown'
+    import {getTag, getCategory} from "@/api/tag_category";
+    import {publishArticle, editArticle,articleMdImage,articleDetail} from '@/api/article'
+    import {markdown} from '@/utils/markdown'
     import UP from '@/components/upload/upCover.vue'
+    import {getQiniuToken} from '@/api/common'
 
     export default {
         name: "addArticle",
@@ -144,30 +147,50 @@
                 category: '',
                 tagList: [],
                 categoryList: [],
-                accessKey: '9zMRpUgazU_jd9Jpq3Cel3fyFF7D5xAp_KlOpqd7',
-                secretKey: 'aFi5jH7EXqffyILnGKwjvYMOCl1IG7n1ww_P0voK'
+                imageList: []
             }
         },
         methods: {
-            ...mapActions([
-                'getQiniuToken',
-                'uploadToQiniu',
-                'getArticle',
-                'getCategoryList',
-                'getTagList',
-                'saveArticle',
-                'publishArticle',
-                'modifyArticle'
-            ]),
-            uploadTest(){
-                var mac = new qiniu.auth.digest.Mac(this.accessKey, this.secretKey);
+            handleEditorImgAdd(pos, $file){
+                let uploadFile = new window.File([$file], $file.name, { type: $file.type })
+                var formData = new FormData()
+
+                const qiniuToken = this.$store.state.app.qiniuToken
+
+                if(qiniuToken === ''){
+                    getQiniuToken()
+                        .then((response) => {
+                            this.$store.state.app.qiniuToken = response.data
+                            this.uploadEditorImgAdd(formData,$file,response.data,pos)
+                        })
+                        .catch((error) => {
+                            this.$message.error({message:error})
+                        })
+                }
+                else {
+                    this.uploadEditorImgAdd(formData,$file,qiniuToken,pos)
+                }
             },
-            uploadSuccess(image){
+            uploadEditorImgAdd(formData,$file,qiniuToken,pos){
+                formData.append('file',$file)
+                formData.append('token',qiniuToken.token)
+                articleMdImage(formData)
+                    .then((response) => {
+                        this.$refs.md.$img2Url(pos, 'http://q6gpc1mpo.bkt.clouddn.com/' + response.key)
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+            },
+            handleEditorImgDel (pos) {
+                delete this.imageList[pos]
+            },
+            uploadSuccess(image) {
 
                 let imgUrl = 'http://q6gpc1mpo.bkt.clouddn.com/' + image
                 this.article.cover = imgUrl
             },
-            init(){
+            init() {
                 this.getTagList()
                 this.getCategoryList()
             },
@@ -230,7 +253,7 @@
                     this.$message.error({message: '文章内容不能为空!'});
                     return
                 }
-                editArticle()
+                editArticle(this.articleId,params)
                     .then(() => {
                         this.$message.success({message: '修改成功!'});
                     })
@@ -255,10 +278,9 @@
                         tags.push(tag.name)
                     }
                 })
-                console.log(tags);
                 return tags
             },
-            getTagList(){
+            getTagList() {
                 getTag()
                     .then((response) => {
                         const tagList = response.data
@@ -268,7 +290,7 @@
                         console.log(error);
                     })
             },
-            getCategoryList(){
+            getCategoryList() {
                 getCategory()
                     .then((response) => {
                         const categoryList = response.data
@@ -280,13 +302,32 @@
             }
         },
         created() {
-          this.init()
+            const articleId = this.$route.query.id
+            if(articleId) {
+
+                this.articleId = articleId
+                articleDetail(articleId)
+                    .then((response) => {
+                        const article = response.data[0]
+                        this.tags = article.tag
+                        this.category = article.category
+                        this.article.cover = article.cover
+                        this.article.content = article.content
+                        this.article.subMessage = article.sub_message
+                        this.article.is_encrypt = article.is_encrypt
+                        this.article.title = article.title
+                    })
+                    .catch((error) => {
+                        this.$message.error({message:error})
+                    })
+            }
+            this.init()
         }
     }
 </script>
 
 <style scoped lang="scss">
-    @import '../../style/variables';
+    @import '../../../style/variables';
 
     .addArticle {
         padding: 36px 30px;

@@ -98,7 +98,7 @@
 </template>
 
 <script>
-    import {getUsers, deleteUser, updateUser, addUser} from "../../api/user";
+    import {getUsers, deleteUser, updateUser, addUser} from "@/api/user";
 
     export default {
         name: "",
@@ -173,8 +173,6 @@
                         return false;
                     }
                 });
-
-
             },
             addUserInfo(formName) {
                 this.$refs[formName].validate((valid) => {

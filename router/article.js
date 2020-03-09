@@ -7,17 +7,22 @@ const Article = require("../models/article");
 
 const qiniu = require('qiniu')
 
+/*
+* 获取未被删除、未加密的文章列表 客户端
+* */
 router.get('/article',(request,response) => {
-    Article.find({})
-        .sort({ update_at: -1 })
+    Article.find({status:0,is_encrypt: 0})
+        .sort({ created_time: -1 })
         .then(articles => {
-            response.json(articles);
+            response.json({
+                code: 20000,
+                data: articles
+            });
         })
         .catch(err => {
             response.json(err);
         });
 })
-
 
 router.get('/article:id',(request,response) => {
     Article.findById(request.params.id)
@@ -68,7 +73,6 @@ router.get('/delete_article',(request,response) => {
 
 //更新一条英雄信息数据路由
 router.put("/article/:id", (req, res) => {
-    console.log(req.body)
     Hero.findOneAndUpdate(
         { _id: req.params.id },
         {
@@ -154,5 +158,28 @@ router.get('/qiniu_token',(request, response) => {
         data: {token:uploadToken}
     })
 })
+
+// 更新文章
+router.post("/article_edit", (request, response) => {
+    const data = request.body
+    Article.findOneAndUpdate(
+        {_id: request.params.id},
+        {
+            $set: {
+                title: request.body.title,
+                tag: request.body.tag,
+                cover: request.body.cover,
+                sub_message: request.body.sub_message,
+                is_encrypt: request.body.is_encrypt,
+                content: request.body.content,
+                html_content: request.body.html_content,
+                category: request.body.category
+            }
+        },
+        {
+            new: true
+        }
+    )
+});
 
 module.exports = router;

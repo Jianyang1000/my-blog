@@ -1,6 +1,5 @@
 //引入mongoose模块
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/test',{ useNewUrlParser: true })
 //定义数据模型，可以看到，我们下面创建了一个表，表中的数据有name、age、sex等字段，并且这些字段的数据类型也定义了，最后将model导出即可
 const sysLogSchema = mongoose.Schema({
     name :String,

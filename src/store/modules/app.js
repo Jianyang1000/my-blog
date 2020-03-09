@@ -8,6 +8,8 @@ const state = {
     articleMenu: false,
     articleMenuSource: [],
     articleMenuTag: '1.',
+    showRightNav: false,
+    qiniuToken: ''
 }
 
 const mutations = {
@@ -32,6 +34,9 @@ const actions = {
     },
     setArticleMenuTag (store, articleMenuTag) {
         store.state.articleMenuTag = articleMenuTag
+    },
+    setShowRightNav (store, show) {
+        store.state.showRightNav = show
     },
 
 }

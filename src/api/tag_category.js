@@ -1,11 +1,17 @@
 import request from '@/utils/request'
 
+/*
+* 服务端
+* */
+
+
 export function getTag() {
     return request({
         url: '/api/tag',
         method: 'get',
     })
 }
+
 
 export function getCategory(){
     return request({
@@ -21,6 +27,25 @@ export function addTag(data){
         data
     })
 }
+
+/*
+* 客户端
+* */
+
+export function getBlogCategory(){
+    return request({
+        url: '/api/blog_category',
+        method: 'get'
+    })
+}
+
+export function getBlogTag() {
+    return request({
+        url: '/api/blog_tag',
+        method: 'get',
+    })
+}
+
 
 export function addCategory(data){
     return request({

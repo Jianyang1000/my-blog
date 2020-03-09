@@ -5,6 +5,7 @@ const dashboard = require('./router/dashboard')
 const user = require('./router/user')
 const tag_category = require('./router/tag_category')
 const mongoose = require("mongoose");
+mongoose.connect('mongodb://localhost:27017/blog',{ useNewUrlParser: true })
 const bodyParser = require("body-parser");
 const port = 3000
 

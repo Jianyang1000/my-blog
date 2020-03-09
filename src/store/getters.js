@@ -7,5 +7,6 @@ const getters = {
     name: state => state.user.name,
     introduction: state => state.user.introduction,
     roles: state => state.user.roles,
+    articleMenu: state => state.app.articleMenu
 }
 export default getters
